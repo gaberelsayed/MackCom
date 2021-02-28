@@ -1,0 +1,12 @@
+<div style="color: red;display: <%= error || error !="" ?'unset':'none' %>;" class="alert alert-danger alert-dismissible   message" role="alert">
+    <% if (error) { %>
+    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+    <%= error %>   
+    <% } %>
+</div>
+<div style="color: green;display: <%= success || success !="" ?'unset':'none' %>;" class="alert alert-success alert-dismissible   message" role="alert">
+    <% if (success) { %>
+    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+    <%= success %>   
+    <% } %>
+</div>

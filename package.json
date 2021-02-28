@@ -1,0 +1,40 @@
+{
+  "name": "mackcom",
+  "version": "1.0.0",
+  "description": "A solution for small scale business ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sudeepjhs/MackCom.git"
+  },
+  "keywords": [
+    "MackCom"
+  ],
+  "author": "Sudeep Agarwal , Hitesh Tiwani , Hitesh Gyan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sudeepjhs/MackCom/issues"
+  },
+  "homepage": "https://github.com/sudeepjhs/MackCom#readme",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "body-parser": "^1.19.0",
+    "connect-flash": "^0.1.1",
+    "connect-mongodb-session": "^2.4.1",
+    "csurf": "^1.11.0",
+    "dotenv": "^8.2.0",
+    "ejs": "^3.1.6",
+    "express": "^4.17.1",
+    "express-session": "^1.17.1",
+    "express-validator": "^6.10.0",
+    "mongodb": "^3.6.4",
+    "mongoose": "^5.11.17",
+    "nodemailer": "^6.5.0",
+    "nodemon": "^2.0.7",
+    "striptags": "^3.1.1",
+    "urlencode": "^1.1.0"
+  }
+}
