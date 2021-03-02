@@ -3,8 +3,9 @@ const bcrypt = require('bcrypt');
 const {validationResult} = require("express-validator");
 const crypto = require("crypto")
 const mailer = require("../utils/mailer");
+const mongoose = require('mongoose');
 
-exports.postRegister = (req, res) => {
+exports.postRegister = (req, res,next) => {
     const name = req.body.fullname;
     const email = req.body.email;
     const password = req.body.password;
@@ -30,11 +31,13 @@ exports.postRegister = (req, res) => {
                 success: 'Successfully Registered'
             });
         }).catch(err => {
-            console.log(err);
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);
         });
 }
 
-exports.postLogin = (req, res) => {
+exports.postLogin = (req, res,next) => {
     const email = req.body.email;
     const password = req.body.password;
     const error = validationResult(req);
@@ -60,11 +63,15 @@ exports.postLogin = (req, res) => {
                     });
                 }
             }).catch(err => {
-                console.log(err);
+                const error = new Error(err);
+                error.httpStatusCode = 500;
+                return next(error);
             })
         })
         .catch(err => {
-            console.log(err);
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);
         })
 }
 
@@ -95,7 +102,7 @@ exports.postReset = (req, res, next) => {
                 user.resetTokenExpire = Date.now() + 360000;
                 return user.save();
             })
-            .then(result => {
+            .then(() => {
                 let message = {
                     from: 'markCom@test.com', // Sender address
                     to: email, // List of recipients
@@ -107,17 +114,19 @@ exports.postReset = (req, res, next) => {
                 };
                 return mailer.sendMail(message);
             })
-            .then(err => {
+            .then(() => {
                 req.flash("success", "Check Mail to reset password");
                 return res.redirect('/');
             })
             .catch(err => {
-                console.log(err);
+                const error = new Error(err);
+                error.httpStatusCode = 500;
+                return next(error);
             })
     });
 }
 
-exports.getUpdatePassword = (req, res) => {
+exports.getUpdatePassword = (req, res,next) => {
     const token = req.params.token;
     User.findOne({
             resetToken: token,
@@ -136,11 +145,13 @@ exports.getUpdatePassword = (req, res) => {
             res.redirect('/');   
         }
         }).catch(err => {
-            console.log(err);
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);
         })
 }
 
-exports.postUpdatePassword = (req, res) => {
+exports.postUpdatePassword = (req, res,next) => {
     const token = req.body.passwordToken;
     const password = req.body.newpassword;
     let resetUser;
@@ -166,7 +177,9 @@ exports.postUpdatePassword = (req, res) => {
             res.redirect('/');
         })
         .catch(err => {
-            console.log(err);
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);
         })
 }
 
@@ -195,8 +208,14 @@ exports.checkAuth = (req,res,next)=>{
 
 exports.logout = (req,res)=>{
     req.session.destroy(err=>{
-         console.log(err);
-         req.flash("success","Loggout Successfully")
-         res.redirect('/');
+        mongoose.connection.close()
+        .then(()=>{
+            req.flash("success","Loggout Successfully")
+            res.redirect('/');
+        }).catch(err=>{
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);
+        })
     })
 }
