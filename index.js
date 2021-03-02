@@ -40,8 +40,9 @@ app.use((req, res, next) => {
       next();
     })
     .catch(err => {
-      console.log(err);
-      throw new Error(err);
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
     })
 });
 app.use((req,res,next)=>{
