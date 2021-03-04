@@ -4,6 +4,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
 const auth = require("./routes/auth");
+const userRoute = require("./routes/user");
 const errorController = require("./controllers/error");
 const session = require("express-session");
 const MongoDBStore = require("connect-mongodb-session")(session);
@@ -54,7 +55,7 @@ app.use((req,res,next)=>{
 });
 
 app.use(auth);
-
+app.use(userRoute);
 app.use(errorController.getError403);
 
 app.use(errorController.getError500);
