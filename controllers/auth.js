@@ -199,12 +199,6 @@ exports.getLogin = (req, res) => {
     });
 }
 
-exports.checkAuth = (req,res,next)=>{
-    if(!req.session.user){
-         res.redirect('/');
-    }
-    next();
-}
 
 exports.logout = (req,res)=>{
     req.session.destroy(err=>{

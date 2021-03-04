@@ -9,17 +9,18 @@ const UserSchema = new Schema({
     phoneBook:{
         contacts:[{
             name: {type:String},
-            mobile : {type:Number,min:10,max:12}
+            mobile : {type:Number,min:10}
         }]
     },
     messageBox:{
         messages:[{
+            title: {type:String},
             msg:{type:String} 
         }]
     }
 });
 
-UserSchema.methods.addContact = (name,mob)=>{
+UserSchema.methods.addContact = function(name,mob){
     const checkNumber = this.phoneBook.contacts.findIndex(c=>{
        return c.mobile.toString() === mob.toString(); 
     })
@@ -31,21 +32,32 @@ UserSchema.methods.addContact = (name,mob)=>{
         name:name,
         mobile:mob
     });
-    this.phoneBook.contacts = contact;
+    const UpdateContact = {
+        contacts : contact
+    }
+    this.phoneBook = UpdateContact;
     return this.save();
 }
-UserSchema.methods.removeContact = (mob)=>{
+UserSchema.methods.removeContact = function(mob){
     const UpdateContact = this.phoneBook.contacts.filter(m=>{
       return  m.mobile.toString() != mob.toString();
     })
     this.phoneBook.contacts = UpdateContact;
     return this.save();
 }
-UserSchema.methods.addMessage = (msg)=>{
+UserSchema.methods.addMessage = function(title,message){
+    const checkmsg = this.messageBox.messages.findIndex(m=>{
+        return m.msg.toString() === message.toString();
+    })
+    if(checkmsg >= 0){
+        return Promise.reject("Already Exisit");
+    }
     const messages = [...this.messageBox.messages];
     messages.push({
-        msg:msg
+        title : title,
+        msg: message
     });
+    this.messageBox.messages = messages;
     return this.save();
 } 
 
