@@ -55,17 +55,18 @@ app.use((req,res,next)=>{
 });
 
 app.use(auth);
+
 app.use(userRoute);
+
 app.use(errorController.getError403);
 
 app.use(errorController.getError500);
 
 app.use(errorController.getError404);
-db().then(result=>{
-  // console.log(result);
+db().then(()=>{
   app.listen(3000, function () {
     console.log("Server started on port 3000.");
   });
-}).catch(err=>{
+}).catch(()=>{
   console.log("Unable to connect");
 })

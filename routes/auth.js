@@ -16,7 +16,7 @@ router.post('/register', [check('email').isEmail()
                 return Promise.reject("Email Already exists");
             }
         });
-    }),
+    }).trim(),
     body("password").matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/, "i").withMessage("Password must contain atleast 1 lowecase,uppercase,number,symbol and lenght should be greater than 8")
 ], auth.postRegister);
 
@@ -42,7 +42,7 @@ router.post('/resetPassword',[body('email').isEmail().withMessage("Enter a valid
             return Promise.reject("Email does not exists");
         }
     });
-})],auth.postReset);
+}).trim()],auth.postReset);
 
 router.get('/updatePassword/:token', auth.getUpdatePassword);
 

@@ -54,6 +54,8 @@ exports.postLogin = (req, res,next) => {
                 if (match) {
                     req.session.user = user;
                     return req.session.save(err => {
+                        if(req.session.redirect)
+                        return  res.redirect(req.session.redirect);
                         res.redirect('/');
                     });
                 } else {

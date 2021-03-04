@@ -20,6 +20,10 @@ const UserSchema = new Schema({
     }
 });
 
+UserSchema.methods.getContact = function () {
+    return this.phoneBook.contacts;
+}
+
 UserSchema.methods.addContact = function(name,mob){
     const checkNumber = this.phoneBook.contacts.findIndex(c=>{
        return c.mobile.toString() === mob.toString(); 
@@ -38,9 +42,9 @@ UserSchema.methods.addContact = function(name,mob){
     this.phoneBook = UpdateContact;
     return this.save();
 }
-UserSchema.methods.removeContact = function(mob){
-    const UpdateContact = this.phoneBook.contacts.filter(m=>{
-      return  m.mobile.toString() != mob.toString();
+UserSchema.methods.removeContact = function(id){
+    const UpdateContact = this.phoneBook.contacts.filter(c=>{
+      return  c._id.toString() != id.toString();
     })
     this.phoneBook.contacts = UpdateContact;
     return this.save();
@@ -60,5 +64,13 @@ UserSchema.methods.addMessage = function(title,message){
     this.messageBox.messages = messages;
     return this.save();
 } 
+
+UserSchema.methods.deleteMessage = function (id) { 
+    const UpdateMessage = this.messageBox.messages.filter(m=>{
+        return  m._id.toString() != id.toString();
+      })
+      this.messageBox.messages = UpdateMessage;
+      return this.save();
+ }
 
 module.exports = mongoose.model("User", UserSchema);
