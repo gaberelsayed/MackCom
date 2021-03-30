@@ -22,6 +22,7 @@ body {
     transform: translate(0, -50%);
     top: 50%;
     display: inline-flex;
+    margin: 0%;
 }
 
 .frontbox {
@@ -34,6 +35,7 @@ body {
     right: 0;
     margin-left: 3%;
     transition: right 0.8s ease-in-out;
+    margin-right: 0%;
 }
 
 .moving {
@@ -106,7 +108,7 @@ body {
     font-size: 12px;
 }
 
-.login button,
+.login input[type="submit"],
 .signup button {
     background-color: #35b729;
     border: none;
@@ -121,6 +123,7 @@ body {
     right: 30px;
     bottom: 30px;
     cursor: pointer;
+    height: 2em;
 }
 
 /* Fade In & Out*/
@@ -142,4 +145,33 @@ body {
 
 .hide {
     display: none;
+}
+
+@media screen and (max-width: 700px) {
+    .backbox{
+        visibility: collapse;
+    }
+    .frontbox{
+        width: 50%;
+        margin: 0%;
+        right: 15%;
+        z-index: -1;
+    }
+    #switch1,#switch2{
+        visibility: visible;
+        position: absolute;
+        left: 40%;
+        top: 80%;
+    }
+    #switch1{
+        margin-top: 0%;
+    }
+}
+@media screen and (max-width: 320px){
+    .frontbox{
+        right: 10%;
+    }
+    #switch1,#switch2{
+        left: 45%;
+    }
 }

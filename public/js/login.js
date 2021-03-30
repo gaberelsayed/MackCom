@@ -3,7 +3,7 @@ const $loginMsg = $('.loginMsg'),
     $signupMsg = $('.signupMsg'),
     $signup = $('.signup'),
     $frontbox = $('.frontbox');
-
+    
 $('#switch1').on('click', function () {
     $loginMsg.toggleClass("visibility");
     $frontbox.addClass("moving");

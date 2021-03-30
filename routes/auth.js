@@ -48,4 +48,6 @@ router.get('/updatePassword/:token', auth.getUpdatePassword);
 
 router.post('/updatePassword', auth.postUpdatePassword);
 
+router.get('/logout',auth.logout);
+
 module.exports = router;

@@ -1,0 +1,83 @@
+<%- include ('./layout/header.ejs') %>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+    td>input,td>textarea {
+        background: border-box;
+        border: none;
+        outline: none;
+    }
+</style>
+
+<body>
+
+    <%- include ('layout/alert.ejs') %>
+    <%- include ('layout/nav.ejs') %>
+    <br><br>
+    <div class="container">
+        <table class="table table-striped table-hover  table-responsive-md">
+            <thead>
+                <tr class="table-success">
+                    <th scope="col"> Message Title </th>
+                    <th scope="col"> Messages Description</th>
+                    <th scope="col" colspan="2">Action </th>
+                </tr>
+            </thead>
+            <tbody>
+                <% if (message.length === 0) { %>
+                <tr>
+                    <td style="color: red;" colspan="5">No Message Found ...</td>
+                </tr>
+                <% } else { %>
+                <% message.forEach(m => { %>
+                <tr>
+                    <td><input type="text" name="title" readonly value="<%= m.title %>"></td>
+                    <td><textarea name="msg" cols="30" readonly role="definition" ><%= m.msg %></textarea></td>
+                    <td>
+                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                        <button data-toggle="modal" data-target="#msgModel" onclick="openMsgUpdate(this)"
+                            data-id="<%= m._id %>" type="button" class="btn btn-success">Edit</button>
+                    </td>
+                    <td>
+                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                        <button data-id="<%= m._id %>" onclick="deleteMsg(this)" type="button"
+                            class="btn btn-danger">Delete</button>
+                    </td>
+                </tr>
+                <% }) }%>
+            </tbody>
+        </table>
+    </div>
+    </div>
+    <!-- Modal -->
+  <div class="modal fade" id="msgModel" tabindex="-1" role="dialog" aria-labelledby="msgModel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Edit Message</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="title">Title</label>
+            <input type="text" name="title" id="title" class="form-control" value="">
+          </div>
+          <div class="form-group">
+            <label for="mob">Message</label>
+            <input type="text" name="msg" id="msg" class="form-control" value="">
+          </div>
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button id="updateBtn"  onclick="updateMsg(this)" type="button" class="btn btn-primary">Update</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+    <%- include ('layout/toast.ejs') %>
+    <script src="/js/crud.js"></script>
+    <%- include ('./layout/footer.ejs') %>

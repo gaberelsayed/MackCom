@@ -1,57 +1,59 @@
-<%- include ('./layout/header.ejs') %> 
-    <link rel="stylesheet" href="css/login.css">
+<%- include ('./layout/header.ejs') %>
+<link rel="stylesheet" href="/css/login.css">
 </head>
 
 <body>
-    <%- include ('layout/alert.ejs') %> 
-        <div class="container">
-            <div class="backbox">
-                <div class="loginMsg">
-                    <div class="textcontent">
-                        <p class="title">Don't have an account?</p>
-                        <p>Sign up to save all your graph.</p>
-                        <button id="switch1">Sign Up</button>
-                    </div>
-                </div>
-                <div class="signupMsg visibility">
-                    <div class="textcontent">
-                        <p class="title">Have an account?</p>
-                        <p>Log in to see all your collection.</p>
-                        <button id="switch2">LOG IN</button>
-                    </div>
+    <%- include ('layout/alert.ejs') %>
+    <div class="container">
+        <div class="backbox">
+            <div class="loginMsg">
+                <div class="textcontent">
+                    <p class="title">Don't have an account?</p>
+                    <p>Sign up to save all your graph.</p>
+                    <button id="switch1">Sign Up</button>
                 </div>
             </div>
-            <!-- backbox -->
-            
-            <div class="frontbox">
-                <form action="/login" method="post">
-                    <div class="login">
-                        <h2>LOG IN</h2>
-                        <div class="inputbox">
-                            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                            <input required type="text" name="email" placeholder="EMAIL">
-                            <input required type="password" name="password" placeholder="PASSWORD">
-                        </div>
-                        <a href="/resetPassword"><p>FORGET PASSWORD ?</p></a>
-                        <button>LOG IN</button>
-                    </form>
+            <div class="signupMsg visibility">
+                <div class="textcontent">
+                    <p class="title">Have an account?</p>
+                    <p>Log in to see all your collection.</p>
+                    <button id="switch2">LOG IN</button>
                 </div>
-                <div class="signup hide">
-                    <form action="/register" method="post">
-                        <h2>SIGN UP</h2>
-                        <div class="inputbox">
-                            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                            <input required type="text" name="fullname" placeholder="  FULLNAME">
-                            <input required type="text" name="email" placeholder="  EMAIL">
-                            <input required type="password" name="password" placeholder="  PASSWORD">
-                        </div>
-                        <button type="submit">SIGN UP</button>
-                    </form>
-                </div>
-                
             </div>
-            <!-- frontbox -->
         </div>
-        <script src="js/login.js"></script>
-        
-<%- include ('./layout/footer.ejs') %> 
+        <!-- backbox -->
+
+        <div class="frontbox">
+            <form action="/auth/login" method="post">
+                <div class="login">
+                    <h2>LOG IN</h2>
+                    <div class="inputbox">
+                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                        <input required type="text" name="email" placeholder="EMAIL">
+                        <input required type="password" name="password" placeholder="PASSWORD">
+                    </div>
+                    <a href="/auth/resetPassword">
+                        <p>FORGET PASSWORD ?</p>
+                    </a>
+                    <input type="submit" name="login" value="Log In">
+            </form>
+        </div>
+        <div class="signup hide">
+            <form action="/auth/register" method="post">
+                <h2>SIGN UP</h2>
+                <div class="inputbox">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                    <input required type="text" name="fullname" placeholder="  FULLNAME">
+                    <input required type="text" name="email" placeholder="  EMAIL">
+                    <input required type="password" name="password" placeholder="  PASSWORD">
+                </div>
+                <button type="submit">SIGN UP</button>
+            </form>
+        </div>
+
+    </div>
+    <!-- frontbox -->
+    </div>
+    <script src="/js/login.js"></script>
+
+    <%- include ('./layout/footer.ejs') %>
