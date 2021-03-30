@@ -136,6 +136,12 @@ UserSchema.methods.updateMessage = function (id,title,msg) {
 UserSchema.methods.sentSMS = function () { 
     return this.totalSMS
  }
+
+UserSchema.methods.updateSMS = function(){
+    this.totalSMS +=1;
+    this.save();
+}
+
 UserSchema.methods.getMsgValue = function(id){
     const msgIndex = this.messageBox.messages.findIndex(m=>{
         return m._id.toString() == id.toString();

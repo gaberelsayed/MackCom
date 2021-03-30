@@ -171,8 +171,10 @@ exports.updateMessage = (req,res)=>{
 exports.sendMsg = (req, res) => {
     const msgId = req.body.msgId;
     const mob = req.body.mob;
+    console.log(mob);
     const msg = req.user.getMsgValue(msgId);
     smsApi(mob, msg).then(result => {
+        req.user.updateSMS();
         return res.status(200).json({success: "Sent"});
     }).catch(err=>{
         return res.status(500);

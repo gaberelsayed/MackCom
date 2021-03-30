@@ -2,8 +2,7 @@
 function sendMsg(t) {
     const msgId = t.parentNode.querySelector(["select"]).value;
     const csrf = t.parentNode.querySelector("input[name='_csrf']").value;
-    const parent = t.parentNode;
-    const mob = $(parent).prev().text();
+    const mob = t.parentNode.parentNode.querySelector("input[name='mob']").value;
     if (msgId != "null") {
         $("#overlay").show();
         $.ajax({
