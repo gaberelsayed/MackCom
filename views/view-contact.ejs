@@ -1,0 +1,118 @@
+<%- include ('./layout/header.ejs') %>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+  td > input{
+    background: border-box;
+    border: none;
+    outline: none;
+  }
+  #search {
+    width: 150px;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    background-color: white;
+    background-image: url('searchicon.png');
+    background-position: 10px 10px;
+    background-repeat: no-repeat;
+    padding: 12px 20px 12px 10px;
+    margin-bottom: 10px;
+    -webkit-transition: width 0.4s ease-in-out;
+    transition: width 0.4s ease-in-out;
+  }
+
+  #search:focus {
+    width: 30%;
+  }
+
+</style>
+
+<body>
+
+  <%- include ('layout/alert.ejs') %>
+  <%- include ('layout/nav.ejs') %>
+  <div class="container">
+    <div class="container-fluid" style="padding: 5px;">
+      <input type="hidden" name="_csrf" id="searchCsrf" value="<%= csrfToken %>">
+      <input type="text" name="search" id="search" placeholder="Search Contact...">
+    </div>
+    <table class="table table-striped table-hover  table-responsive-md">
+      <thead>
+        <tr class="table-success">
+          <th scope="col">
+            Customer name
+          </th>
+          <th scope="col"> Customer Number </th>
+          <th scope="col"> Messages</th>
+          <th scope="col" colspan="2">Action </th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if (contact.length === 0) { %>
+        <tr>
+          <td style="color: red;" colspan="5">No Contact Found ...</td>
+        </tr>
+        <% } else { %>
+        <% contact.forEach(c => { %>
+        <tr>
+          <td><input type="text" name="name" readonly value="<%= c.name %>"></td>
+          <td><input type="tel" name="mob" readonly value="<%= c.mobile %>"></td>
+          <td style="display: inline-flex;">
+            <select class="form-select" name="msg">
+              <option value="null" disabled selected>Select Message</option>
+              <% message.forEach(m => { %>
+              <option value="<%= m._id %>"><%= m.title %></option>
+              <% }) %>
+            </select>
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <button onclick="sendMsg(this)" style="margin-left: 10px;" class="btn btn-primary"><i class="fa fa-send"></i></button>
+          </td>
+          <td>
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <button data-toggle="modal" data-target="#contactModel" onclick="openContactUpdate(this)" data-id="<%= c._id %>" type="button" class="btn btn-success">Edit</button>
+          </td>
+          <td>
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <button data-id="<%= c._id %>" onclick="deleteContact(this)" type="button"
+              class="btn btn-danger">Delete</button>
+          </td>
+        </tr>
+        <% }) }%>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="contactModel" tabindex="-1" role="dialog" aria-labelledby="modelTitleId"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Edit Contact</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="form-group">
+              <label for="name">Name</label>
+              <input type="text" name="name" id="name" class="form-control" value="">
+            </div>
+            <div class="form-group">
+              <label for="mob">Mobile No.</label>
+              <input type="tel" name="mob" id="mob" class="form-control" value="">
+            </div>
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button id="updateBtn"  onclick="updateContact(this)" type="button" class="btn btn-primary">Update</button>
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <%- include ('layout/toast.ejs') %>
+  <script src="/js/crud.js"></script>
+  <%- include ('./layout/footer.ejs') %>

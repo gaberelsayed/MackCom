@@ -1,8 +1,161 @@
-<%- include ('./layout/header.ejs') %>     
+<%- include ('./layout/header.ejs') %>
+<link rel="stylesheet" href="/css/home.css">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
+
 <body>
-    <%- include ('layout/alert.ejs') %> 
-    
+  <%- include ('layout/alert.ejs') %>
+  <!-- -----------------------------------Navbar------------------------------------- -->
 
+  <nav>
+    <input type="checkbox" id="check">
+    <label for="check" class="checkbtn">
+      <i class="fa fa-bars"></i>
+    </label>
+    <label class="logo">MarkCom &nbsp;<i class="fa fa-paper-plane"></i></label>
+    <ul id="ulchange">
+      <li><a class="active" href="#">Home</a></li>
+      <li><a href="#">About</a></li>
+      <li><a href="#">Services</a></li>
+    </ul>
+  </nav>
 
-    <%- include ('./layout/footer.ejs') %> 
+  <!-------------------------------Banner and text------------------------------  -->
+
+  <section>
+    <div class="container1">
+      <div class="banner">
+        <div class="text">
+          <h1 id="change">MarkCom <i class="fa fa-paper-plane"></i></h1>
+          <br>
+          <h2 id="change2">A Business Coummunication Solution</h2>
+          <br>
+          <br>
+          <h3 id="changetext">MarkCom is a Small Business Oriented SMS Based <br><br> Web Application Communication
+            Platform</h3>
+          <a href="/auth"><button>Login / Sign Up</button></a>
+        </div>
+        <div class="picture">
+          <img src="/images/bot.png">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ---------------------------------Website Features-------------------------- -->
+
+  <section>
+    <div class="category">
+      <p class="title">Business Oriented Communication Platform</p>
+    </div>
+  </section>
+  <section style="height: 200px;">
+    <br><br>
+    <div class="feature_box_wrapper full_width">
+      <div class="feature_circle">
+        <i class="fa fa-paper-plane-o"></i>
+      </div>
+      <div class="feature_circle_cont full_width">
+        <p>Easily send bulk messages</p>
+      </div>
+    </div>
+
+    <div class="feature_box_wrapper full_width" id="feature_box2">
+      <div class="feature_circle">
+        <i class="fa fa-lock"></i>
+      </div>
+      <div class="feature_circle_cont full_width">
+        <p>100% secure and safe CRSF </p>
+      </div>
+    </div>
+
+    <div class="feature_box_wrapper full_width" id="feature_box3">
+      <div class="feature_circle">
+        <i class="fa fa-lightbulb-o"></i>
+      </div>
+      <div class="feature_circle_cont full_width">
+        <p>Communication platform for <br> all your ideas</p>
+      </div>
+    </div>
+
+    <div class="feature_box_wrapper full_width" id="feature_box4">
+      <div class="feature_circle">
+        <i class="fa fa-bolt"></i>
+      </div>
+      <div class="feature_circle_cont full_width">
+        <p>Sends SMS without any delay</p>
+      </div>
+    </div>
+
+    <div class="feature_box_wrapper full_width" id="feature_box5">
+      <div class="feature_circle">
+        <i class="fa fa-users"></i>
+      </div>
+      <div class="feature_circle_cont full_width">
+        <p>User Friendly Interface, <br>easy to use</p>
+      </div>
+    </div>
+
+    <div class="feature_box_wrapper full_width" id="feature_box6">
+      <div class="feature_circle">
+        <i class="fa fa-comment"></i>
+      </div>
+      <div class="feature_circle_cont full_width">
+        <p>Promotions based SMS</p>
+      </div>
+    </div>
+  </section>
+  <!-- --------------------------Footer--------------------------------- -->
+
+  <footer class="footer">
+    <div class="change3">
+      <div class="row">
+        <div class="footer-col">
+          <h4>Features</h4>
+          <ul>
+            <li><a href="#">Send SMS Online</a></li>
+            <li><a href="#">100% Secure And Safe</a></li>
+            <li><a href="#">Sends SMS Without Any Delay</a></li>
+            <li><a href="#">User Friendly Interface</a></li>
+            <li><a href="#">Promotions Based SMS</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Reviews</a></li>
+            <li><a href="#">Contact Support</a></li>
+            <li><a href="#">Our Clients</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Useful Links</h4>
+          <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Services</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Follow Us On</h4>
+          <div class="social-links">
+            <a href="#"><i class="fa fa-facebook"></i></a>
+            <a href="#"><i class="fa fa-twitter"></i></a>
+            <a href="#"><i class="fa fa-instagram"></i></a>
+            <a href="#"><i class="fa fa-youtube-play"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </footer>
+  <script>
+    $("#ulchange a").click(function (e) {
+      e.preventDefault();
+      $("#ulchange a").removeClass("active");
+      $(this).addClass("active");
+    });
+  </script>
+  <%- include ('./layout/footer.ejs') %>

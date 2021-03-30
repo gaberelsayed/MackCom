@@ -3,7 +3,6 @@ const bcrypt = require('bcrypt');
 const {validationResult} = require("express-validator");
 const crypto = require("crypto")
 const mailer = require("../utils/mailer");
-const mongoose = require('mongoose');
 
 exports.postRegister = (req, res,next) => {
     const name = req.body.fullname;
@@ -53,10 +52,16 @@ exports.postLogin = (req, res,next) => {
             bcrypt.compare(password, user.password).then(match => {
                 if (match) {
                     req.session.user = user;
+                    req.session.lastLogin = user.lastActiveAt;
                     return req.session.save(err => {
+                        user.setlastLogin();
                         if(req.session.redirect)
-                        return  res.redirect(req.session.redirect);
-                        res.redirect('/');
+                        {
+                            let redirect = req.session.redirect;
+                            delete req.session.redirect;
+                            return  res.redirect(redirect);
+                        }
+                        res.redirect('/user');
                     });
                 } else {
                     return res.render('login.ejs', {
@@ -94,7 +99,7 @@ exports.postReset = (req, res, next) => {
     }
     crypto.randomBytes(32, (err, buffer) => {
         if (err) {
-            return res.redirect('/resetPassword');
+            return res.redirect('/auth/resetPassword');
         }
         const token = buffer.toString('hex');
         User.findOne({
@@ -111,14 +116,14 @@ exports.postReset = (req, res, next) => {
                     subject: 'Password reset ! | MarkCom', // Subject line
                     html: `
                 <p>To reset Password :</p>
-                <p>Click this <a href ="${BaseURL}updatePassword/${token}" >Link</a> to reset password</p>
+                <p>Click this <a href ="${BaseURL}/auth/updatePassword/${token}" >Link</a> to reset password</p>
                 `
                 };
                 return mailer.sendMail(message);
             })
             .then(() => {
                 req.flash("success", "Check Mail to reset password");
-                return res.redirect('/');
+                return res.redirect('/auth');
             })
             .catch(err => {
                 const error = new Error(err);
@@ -144,7 +149,7 @@ exports.getUpdatePassword = (req, res,next) => {
             });
         }else{
             req.flash("error","Invalid link or link get Expired");
-            res.redirect('/');   
+            res.redirect('/auth');   
         }
         }).catch(err => {
             const error = new Error(err);
@@ -166,7 +171,7 @@ exports.postUpdatePassword = (req, res,next) => {
             resetUser = user;
             return bcrypt.hash(password, 12)
         }
-        res.redirect('/');
+        res.redirect('/auth');
         })
         .then(hashPassword => {
             resetUser.password = hashPassword;
@@ -176,7 +181,7 @@ exports.postUpdatePassword = (req, res,next) => {
         })
         .then(result => {
             req.flash("success", "Password Sucessfully Updated")
-            res.redirect('/');
+            res.redirect('/auth');
         })
         .catch(err => {
             const error = new Error(err);
@@ -186,6 +191,13 @@ exports.postUpdatePassword = (req, res,next) => {
 }
 
 exports.getLogin = (req, res) => {
+    if(req.session.user){
+        req.session.lastLogin = req.user.lastActiveAt;
+        req.user.setlastLogin();
+        if(req.session.redirect)
+            return res.redirect(req.session.redirect);
+        return res.redirect('/user');
+    }
     let message = req.flash("success");
     let Errormessage = req.flash("error");
     if(message.length ===0){
@@ -202,16 +214,13 @@ exports.getLogin = (req, res) => {
 }
 
 
-exports.logout = (req,res)=>{
+exports.logout = (req,res,next)=>{
     req.session.destroy(err=>{
-        mongoose.connection.close()
-        .then(()=>{
-            req.flash("success","Loggout Successfully")
-            res.redirect('/');
-        }).catch(err=>{
+            if(!err)
+                return res.redirect('/auth');
+            console.log(err);
             const error = new Error(err);
             error.httpStatusCode = 500;
             return next(error);
-        })
     })
 }

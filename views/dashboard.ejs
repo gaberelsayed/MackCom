@@ -1,0 +1,45 @@
+<%- include ('./layout/header.ejs') %>
+<link rel="stylesheet" href="/css/dashboard.css">
+</head>
+
+<body>
+    <%- include ('./layout/nav.ejs') %>
+    <%- include ('./layout/alert.ejs') %>
+    <div class="container">
+        <div class="flip">
+            <div class="front">
+                <h1 class="text-shadow">LAST LOGIN</hi>
+            </div>
+            <div class="back">
+                <h2><%= lastlogin %> </h2>
+
+            </div>
+        </div>
+        <div class="flip">
+            <div class="front">
+                <h1 class="text-shadow">TOTAL CONTACTS</hi>
+            </div>
+            <div class="back">
+                <h2><%= totalcontact %> </h2>
+
+            </div>
+        </div>
+        <div class="flip">
+            <div class="front">
+                <h1 class="text-shadow">TOTAL MESSAGES</hi>
+            </div>
+            <div class="back">
+                <h2><%= totalmsg %> </h2>
+            </div>
+        </div>
+        <div class="flip">
+            <div class="front">
+                <h1 class="text-shadow">TOTAL SMS SENT</hi>
+            </div>
+            <div class="back">
+                <h2><%= totalsms %> </h2>
+
+            </div>
+        </div>
+    </div>
+    <%- include ('./layout/footer.ejs') %>
