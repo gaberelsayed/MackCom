@@ -1,5 +1,5 @@
 require('dotenv').config({path: './.env'});
-global.BaseURL = "http://localhost:3000/";
+global.BaseURL = "http://localhost:3000";
 const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
@@ -40,6 +40,7 @@ app.use((req, res, next) => {
   User.findById(req.session.user._id)
     .then(user => {
       if(!user){
+        throw Error("User not Found")
         return next();
       }
       req.user = user

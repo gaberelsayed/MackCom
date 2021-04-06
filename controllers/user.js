@@ -1,16 +1,85 @@
+require('dotenv').config({ path: '../.env'});
 const { validationResult} = require("express-validator");
 const smsApi = require("../utils/sendSMS");
+const bcrypt = require('bcrypt');
 const User = require("../models/user");
+const {google} = require('googleapis');
+const OAuth2 = google.auth.OAuth2
+const oauth2Client = new OAuth2(process.env.GOOGLE_ID,process.env.GOOGLE_SECRET,process.env.GOOGLE_REDIRECT);
+const scopes = ['https://www.googleapis.com/auth/contacts.readonly'];
+
+exports.getimportContactURL = (req,res)=>{
+    const url = oauth2Client.generateAuthUrl({
+        access_type: 'offline',
+        scope: scopes
+      });
+     res.redirect(url);
+}
+
+exports.importContact = (req,res)=>{
+    if (req.query.error) {
+        req.flash("error","Please give permission to import contact");
+        // The user did not give us permission.
+        return res.redirect('/user');
+      } else {
+        oauth2Client.getToken(req.query.code, function(err, token) {
+          if (err){
+            req.flash("error","Something Went wrong try after sometime");
+            return res.redirect('/');    
+          }
+          oauth2Client.setCredentials(token);
+          const service = google.people('v1');
+          service.people.connections.list({
+              auth: oauth2Client,
+              resourceName:"people/me",
+              personFields: 'names,phoneNumbers',
+              pageSize:200
+          },(err,result)=>{
+            if (err){
+                req.flash("error","Something Went wrong try after sometime");
+                return res.redirect('/');    
+              } 
+            const connections = result.data.connections;
+            let notAdded = 0;
+            let added = 0;
+            connections.forEach(contact=>{
+                    let name = contact.names[0].displayName;
+                    let number = contact.phoneNumbers[0].value;
+                    number = number.replace(/\D/g, '').slice(-10);
+                    if (name.length>0 && number.length == 10){
+                        req.user.addContact(name, number).then(result => {
+                            added++;  
+                            // console.log(added);
+                        }).catch(err => {
+                            notAdded++;
+                            // console.log(notAdded);
+                        })
+                    }else{
+                        notAdded++;
+                    }
+                })
+             res.redirect('/user/view-contact');
+          });
+        });
+    }
+
+}
+
 exports.getdashBoard = (req, res) => {
     const contact = req.user.getContact();
     const msg = req.user.getMessage();
     const sms = req.user.totalSMS;
+    let errmsg = req.flash('error');
+    if(errmsg.length == 0){
+        errmsg = false;
+    }
     res.render("dashboard.ejs", {
         pageTitle: "Dashboard",
         lastlogin: req.session.lastLogin,
         totalcontact: contact.length,
         totalmsg: msg.length,
-        totalsms: sms
+        totalsms: sms,
+        error:errmsg
     });
 }
 
@@ -171,12 +240,39 @@ exports.updateMessage = (req,res)=>{
 exports.sendMsg = (req, res) => {
     const msgId = req.body.msgId;
     const mob = req.body.mob;
-    console.log(mob);
     const msg = req.user.getMsgValue(msgId);
     smsApi(mob, msg).then(result => {
         req.user.updateSMS();
         return res.status(200).json({success: "Sent"});
     }).catch(err=>{
         return res.status(500);
+    })
+}
+
+exports.updatePassword = (req,res)=>{
+    const oldPassword = req.body.oldPassword;
+    const newPassword = req.body.newPassword;
+    const err = validationResult(req);
+    if (!err.isEmpty()) {
+        // console.log(err);
+        return res.status(422).json({error: err.array()[0].msg});
+    }
+    const userId = req.user._id;
+    bcrypt.compare(oldPassword, req.user.password).then(match=>{
+        if(!match){
+            return res.status(422).json({error:"Enter your correct old password"});
+        }
+        bcrypt.hash(newPassword, 12).then(hash=>{
+            return User.findByIdAndUpdate(userId,{password:hash})
+        }).then(result=>{
+            console.log("change");
+            return res.status(200).json({success:"Succesfully Updated"});
+        }).catch(err=>{
+           return res.status(500);
+        })
+    }).catch(err => {
+        const error = new Error(err);
+        error.httpStatusCode = 500;
+        return next(error);
     })
 }

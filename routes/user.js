@@ -34,4 +34,11 @@ router.delete('/delete-message/:msgId', isAuth, userController.deleteMessage);
 
 router.patch('/update-message/:msgId', isAuth, [body('msg').isLength({min:5}).withMessage("Message should be atleast 5 character"),body('title').isLength({min:5}).withMessage("Message Title should be atleast 5 character")] , userController.updateMessage);
 
+router.patch("/updatePassword", isAuth, [body("newPassword").matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/, "i").withMessage("Password must contain atleast 1 lowecase,uppercase,number,symbol and lenght should be greater than 8"),body("oldPassword").matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/, "i").withMessage("Password must contain atleast 1 lowecase,uppercase,number,symbol and lenght should be greater than 8")],userController.updatePassword)
+
+router.get('/getContactList',isAuth,userController.importContact);
+
+router.get('/importContact',isAuth,userController.getimportContactURL);
+
+
 module.exports = router;
