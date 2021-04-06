@@ -1,37 +1,34 @@
+import Validation from './valid.js';
+const v = new Validation();
+
 $(document).ready(function () {
     setTimeout(function () {
         $('.alert').fadeOut('fast');
     }, 5000);
 });
 
-const checkFields = (...fields) => {
-    const check = fields.filter(f => f.length == 0);
-    if (check.length > 0) {
-        $("#liveToast").addClass("bg-danger");
-        $(".toast-body").html("All Feilds are required !!");
-        $("#liveToast").toast("show");
-        setTimeout(() => {
-            $("#liveToast").removeClass("bg-danger");
-        }, 4000);
-        return false;
-    } else {
-        return true;
+window.updatePassword = (t) => {
+    const old_pass = $("#pass").val();
+    const new_pass = $("#new_pass").val();
+    const csrf = t.parentNode.parentNode.querySelector("input[name='_csrf']").value;
+    if(old_pass == "" || new_pass ==""){
+        return v.showError("All feilds are required");
     }
-}
-
-const showSuccess = data => {
-    $("#liveToast").addClass("bg-success");
-    $(".toast-body").html(data);
-    $("#liveToast").toast("show");
-    setTimeout(() => {
-        $("#liveToast").removeClass("bg-success");
-    }, 3000);
-}
-const showError = (data = "Something went Wrong,Try after sometime !") => {
-    $("#liveToast").addClass("bg-danger");
-    $(".toast-body").html(data);
-    $("#liveToast").toast("show");
-    setTimeout(() => {
-        $("#liveToast").removeClass("bg-danger");
-    }, 3000);
+    $.ajax({
+        type: "PATCH",
+        url: "/user/updatePassword",
+        data: {oldPassword:old_pass,newPassword:new_pass},
+        headers: {'CSRF-Token': csrf },
+        success: function (response) {
+            // console.log(response);
+            v.showSuccess(response.success);            
+        },
+        error: err=>{
+            console.log(err);
+            if(err.status == 422) 
+                return v.showError(err.responseJSON.error)   
+            else
+                return v.showError();        
+        }
+    });
 }

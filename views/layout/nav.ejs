@@ -19,6 +19,8 @@
                     <a class="dropdown-item" href="/user/view-contact">View Contact</a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="/user/add-contact">Add Contact</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="/user/importcontact">Import Contact from Google</a>
                 </div>
             </li>
             <li class="nav-item dropdown">
@@ -56,13 +58,14 @@
                     <div class="form-group">
                         <label for="new_pass">New Password</label>
                         <input type="password" name="new_pass" id="new_pass" class="form-control">
+                        <small>Password must contain atleast 1 lowecase, 1 uppercase, 1 number, 1 symbol and lenght should be greater than 8</small>
                     </div>
                     <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
-                <button class="btn btn-primary" onclick="updatePass()">Change Password</button>
+                <button class="btn btn-primary" onclick="updatePassword(this)">Change Password</button>
             </div>
         </div>
     </div>

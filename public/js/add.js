@@ -1,5 +1,10 @@
-class Post {
+import Validation from './valid.js';
+
+const v = new Validation();
+
+class Post extends Validation {
     constructor(data1, data2) {
+        super();
         this.data = {
             "field1": data1,
             "field2": data2
@@ -16,36 +21,36 @@ class Post {
             },
             success: result => {
                 $("#overlay").hide();
-                showSuccess(result.success)
+                super.showSuccess(result.success)
                 $("#addForm").trigger("reset");
             },
             error: err => {
                 $("#overlay").hide();
                 if (err.status == 409 || err.status == 422) {
-                    showError(err.responseJSON.error)
+                    super.showError(err.responseJSON.error)
                 } else {
-                    showError()
+                    super.showError()
                 }
             }
         });
     }
 }
 
-function postMessage() {
+window.postMessage = () => {
     const title = $("#title").val();
     const msg = $("#msg").val();
     const _csrf = $("#_csrf").val();
-    if (checkFields(title, msg)) {
+    if (v.checkFields(title, msg)) {
         const msgBox = new Post(title, msg)
         msgBox.postData("/user/add-message", _csrf)
     }
 }
 
-function postContact() {
+window.postContact = () => {
     const name = $("#name").val();
     const mob = $("#mob").val();
     const _csrf = $("#_csrf").val();
-    if (checkFields(name,mob)) {
+    if (v.checkFields(name,mob)) {
         const phoneBook = new Post(name,mob)
         phoneBook.postData("/user/add-contact",_csrf)
     }

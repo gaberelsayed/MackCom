@@ -1,5 +1,8 @@
+import Validation from './valid.js';
 
-function sendMsg(t) {
+const v = new Validation();
+
+window.sendMsg = (t) => {
     const msgId = t.parentNode.querySelector(["select"]).value;
     const csrf = t.parentNode.querySelector("input[name='_csrf']").value;
     const mob = t.parentNode.parentNode.querySelector("input[name='mob']").value;
@@ -13,12 +16,12 @@ function sendMsg(t) {
                 msgId: msgId,
                 mob: mob
             },
-            success: response => {$("#overlay").hide(); showSuccess(response.success)},
-            error: err => {$("#overlay").hide(); showError()}
+            success: response => {$("#overlay").hide(); v.showSuccess(response.success)},
+            error: err => {$("#overlay").hide(); v.showError()}
         });
     }
     else{
-        showError("Please Select Message First");
+        v.showError("Please Select Message First");
     }
 }
 
@@ -39,7 +42,7 @@ function del (id,parent,csrf,type){
             success: response => {
                 $("#overlay").hide();
                 $(parent).remove();
-                showSuccess(response.success);
+                v.showSuccess(response.success);
                 if ($("tbody").has("tr").length == 0) {
                     if(type =='contact')
                     $("tbody").append("<tr><td style='color: red;' colspan='5'>No Contact Found ...</td></tr>");
@@ -47,11 +50,11 @@ function del (id,parent,csrf,type){
                        $("tbody").append("<tr><td style='color: red;' colspan='5'>No Message Found ...</td></tr>");
                 }
             },
-            error: err => {$("#overlay").hide(); showError(err.responseJSON.error)}
+            error: err => {$("#overlay").hide(); v.showError(err.responseJSON.error)}
         });
     }
 
-function deleteContact(t) {
+window.deleteContact = (t) => {
     const contactId = $(t).data("id");
     const csrf = t.parentNode.querySelector("input[name='_csrf']").value;
     const parent = t.parentNode.parentNode;
@@ -60,7 +63,7 @@ function deleteContact(t) {
     }
 }
 
-function deleteMsg(t) {
+window.deleteMsg = (t) => {
     const msgId = $(t).data("id");
     const csrf = t.parentNode.querySelector("input[name='_csrf']").value;
     const parent = t.parentNode.parentNode;
@@ -70,6 +73,7 @@ function deleteMsg(t) {
 }
 $("#search").keyup(function (e) {
     // e.preventDefault();
+    let url = "";
     const name = $("#search").val();
     const csrf = $("#searchCsrf").val();
     if(name != ""){
@@ -104,7 +108,7 @@ $("#search").keyup(function (e) {
 
 var UpdateParent;
 
-function update(id,data1,data2,csrf,type){
+function update (id,data1,data2,csrf,type){
     let data = {};
     let url = "";
     if(type == "contact"){
@@ -137,13 +141,13 @@ function update(id,data1,data2,csrf,type){
                 UpdateParent.querySelector("textarea[name='msg']").value = data2
                 UpdateParent.querySelector("input[name='title']").value = data1
             }
-            showSuccess(response.success)
+            v.showSuccess(response.success)
         },
-        error: err => {$("#overlay").hide(); showError(err.responseJSON.error)}
+        error: err => {$("#overlay").hide(); v.showError(err.responseJSON.error)}
     });
 }
 
-function openContactUpdate(t) { 
+window.openContactUpdate = (t) => { 
     const contactId = $(t).data("id");
     const name = t.parentNode.parentNode.querySelector("input[name='name']").value;
     const mob =  t.parentNode.parentNode.querySelector("input[name='mob']").value;
@@ -153,7 +157,7 @@ function openContactUpdate(t) {
         $("#updateBtn").attr("data-update",contactId);
 }
 
-function updateContact(t) { 
+window.updateContact = (t) => { 
     const contactId = $(t).data("update");
     const name = $("#name").val();
     const mob = $("#mob").val();
@@ -162,9 +166,9 @@ function updateContact(t) {
     
 }
 
-function openMsgUpdate(t) { 
+window.openMsgUpdate = (t) => { 
     const msgId = $(t).data("id");
-    console.log("msg");
+    // console.log("msg");
     const title = t.parentNode.parentNode.querySelector("input[name='title']").value;
     const msg =  t.parentNode.parentNode.querySelector("textarea[name='msg']").value;
     UpdateParent = t.parentNode.parentNode;
@@ -172,7 +176,7 @@ function openMsgUpdate(t) {
         $("#msg").val(msg);
         $("#updateBtn").attr("data-update",msgId);
 }
-function updateMsg(t){
+window.updateMsg = (t)=>{
     const msgId = $(t).data("update");
     const title = $("#title").val();
     const msg = $("#msg").val();
