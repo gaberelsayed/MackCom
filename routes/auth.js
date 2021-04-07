@@ -17,8 +17,8 @@ router.post('/register', [check('email').isEmail()
             }
         });
     }).trim(),
-    body("password").matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/, "i").withMessage("Password must contain atleast 1 lowecase,uppercase,number,symbol and lenght should be greater than 8")
-], auth.postRegister);
+    body("password").matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/, "i").withMessage("Password must contain atleast 1 lowecase,uppercase,number,symbol and lenght should be greater than 8"),
+body("fullname").isAlpha().withMessage("Please Write name in correct format").trim()], auth.postRegister);
 
 router.post('/login',[body('email').isEmail().withMessage("Enter valid email").custom((value, {req}) => {
     return User.findOne({
