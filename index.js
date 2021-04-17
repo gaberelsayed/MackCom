@@ -9,6 +9,7 @@ const errorController = require("./controllers/error");
 const session = require("express-session");
 const MongoDBStore = require("connect-mongodb-session")(session);
 const csrf = require('csurf');
+const helmet = require("helmet");
 const User = require("./models/user");
 const flash = require("connect-flash");
 const db = require("./utils/database"); 
@@ -20,6 +21,7 @@ app.use("/css",express.static(__dirname + '/node_modules/bootstrap/dist/css'));
 app.use("/js",express.static(__dirname + '/node_modules/bootstrap/dist/js'));
 app.use("/js",express.static(__dirname + '/node_modules/jquery/dist'));
 app.use("/js",express.static(__dirname + '/node_modules/@popperjs/core/dist/umd'));
+app.use(helmet());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 app.use(session({
