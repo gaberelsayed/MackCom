@@ -2,20 +2,26 @@ import Validation from './valid.js';
 
 const v = new Validation();
 
-window.sendMsg = (t) => {
+window.sendMsg = (t,type=null) => {
     const msgId = t.parentNode.querySelector(["select"]).value;
     const csrf = t.parentNode.querySelector("input[name='_csrf']").value;
-    const mob = t.parentNode.parentNode.querySelector("input[name='mob']").value;
+    let mob;
+    if (type == null) {
+         mob = t.parentNode.parentNode.querySelector("input[name='mob']").value;
+    }
     if (msgId != "null") {
+        let url = "/user/sendMsg";
+        let data = {msgId: msgId,mob: mob}
+        if(type == 'all'){
+            url = "/user/sendMsgToAll";
+            data = {msgId: msgId}
+        } 
         $("#overlay").show();
         $.ajax({
             type: "POST",
-            url: "/user/sendMsg",
+            url: url,
             headers: {'CSRF-Token': csrf },
-            data: {
-                msgId: msgId,
-                mob: mob
-            },
+            data: data,
             success: response => {$("#overlay").hide(); v.showSuccess(response.success)},
             error: err => {$("#overlay").hide(); v.showError()}
         });
@@ -43,11 +49,13 @@ function del (id,parent,csrf,type){
                 $("#overlay").hide();
                 $(parent).remove();
                 v.showSuccess(response.success);
-                if ($("tbody").has("tr").length == 0) {
+                console.log($("#contactsTable").has("tr").length);
+                if ($("#contactsTable").has("tr").length == 0 ) {
+                    $("#sendAll").remove();
                     if(type =='contact')
-                    $("tbody").append("<tr><td style='color: red;' colspan='5'>No Contact Found ...</td></tr>");
+                    $("#contactsTable").append("<tr><td style='color: red;' colspan='5'>No Contact Found ...</td></tr>");
                     if(type =='msg')
-                       $("tbody").append("<tr><td style='color: red;' colspan='5'>No Message Found ...</td></tr>");
+                       $("#contactsTable").append("<tr><td style='color: red;' colspan='5'>No Message Found ...</td></tr>");
                 }
             },
             error: err => {$("#overlay").hide(); v.showError(err.responseJSON.error)}
@@ -92,7 +100,7 @@ $("#search").keyup(function (e) {
                     const csurf = response.csrfToken;
                     $("tbody").empty();
                     response.list.forEach(e => {
-                        $("tbody").append("<tr><td><input type='text' name='name' readonly value='"+e.name+"'></td><td><input type='tel' name='mob' readonly value='"+e.mobile+"'></td><td style='display: inline-flex;'><select class='form-select' name='msg'><option value='null' disabled selected>Select Message</option>"
+                        $("#contactsTable").append("<tr><td><input type='text' name='name' readonly value='"+e.name+"'></td><td><input type='tel' name='mob' readonly value='"+e.mobile+"'></td><td style='display: inline-flex;'><select class='form-select' name='msg'><option value='null' disabled selected>Select Message</option>"
                            +"</select><input type='hidden' name='_csrf' value="+csurf+">"
                            +"<button onclick='sendMsg(this)' style='margin-left: 10px;' class='btn btn-primary'><i class='fa fa-send'></i></button></td><td><input type='hidden' name='_csrf' value="+csurf+">"
                            +"<button data-id="+e._id+" onclick='openContactUpdate(this)' type='button' class='btn btn-success'>Edit</button></td><td><input type='hidden' name='_csrf' value="+csurf+">"
@@ -100,7 +108,7 @@ $("#search").keyup(function (e) {
                     });
                     msg.forEach(m => { $("select").append("<option value='"+m._id+"'>"+m.title+"</option>")})
                 }else{
-                    $("tbody").html("<tr><td style='color: red;' colspan='5'>No Contact Found ...</td></tr>");
+                    $("#contactsTable").html("<tr><td style='color: red;' colspan='5'>No Contact Found ...</td></tr>");
                 }
             }
         });

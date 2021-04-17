@@ -47,7 +47,22 @@
           <th scope="col" colspan="2">Action </th>
         </tr>
       </thead>
-      <tbody>
+      <% if (contact.length != 0) { %>
+        <tr id="sendAll">
+          <td colspan="2"><input type="text" name="name" readonly value="Send To All"></td>
+          <td style="display: inline-flex;">
+            <select class="form-select" name="msg">
+              <option value="null" disabled selected>Select Message</option>
+              <% message.forEach(m => { %>
+              <option value="<%= m._id %>"><%= m.title %></option>
+              <% }) %>
+            </select>
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <button onclick="sendMsg(this,'all')" style="margin-left: 10px;" class="btn btn-primary"><i class="fa fa-send"></i></button>
+          </td><td colspan="2"></td>
+        </tr>
+        <% }  %>
+      <tbody id="contactsTable">
         <% if (contact.length === 0) { %>
         <tr>
           <td style="color: red;" colspan="5">No Contact Found ...</td>

@@ -21,6 +21,8 @@ router.post('/view-contact', isAuth, userController.postContact);
 
 router.post('/sendMsg', isAuth, userController.sendMsg);
 
+router.post('/sendMsgToAll', isAuth, userController.sendMsgAll);
+
 router.delete('/delete-contact/:contactId', isAuth, userController.deleteContact);
 
 router.patch("/update-contact/:contactId", isAuth,[body('name').isAlpha("en-IN",{ignore:" "}).withMessage("Enter name in correct format").trim(),
