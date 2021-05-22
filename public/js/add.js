@@ -36,7 +36,8 @@ class Post extends Validation {
     }
 }
 
-window.postMessage = () => {
+$("#add_msg").click(function (e) { 
+    e.preventDefault();
     const title = $("#title").val();
     const msg = $("#msg").val();
     const _csrf = $("#_csrf").val();
@@ -44,14 +45,15 @@ window.postMessage = () => {
         const msgBox = new Post(title, msg)
         msgBox.postData("/user/add-message", _csrf)
     }
-}
+});
 
-window.postContact = () => {
+$("#add_contact").click(function (e) { 
+    e.preventDefault();
     const name = $("#name").val();
     const mob = $("#mob").val();
     const _csrf = $("#_csrf").val();
     if (v.checkFields(name,mob)) {
         const phoneBook = new Post(name,mob)
         phoneBook.postData("/user/add-contact",_csrf)
-    }
-}
+    }    
+});

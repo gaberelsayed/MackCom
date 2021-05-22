@@ -58,7 +58,7 @@
               <% }) %>
             </select>
             <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-            <button onclick="sendMsg(this,'all')" style="margin-left: 10px;" class="btn btn-primary"><i class="fa fa-send"></i></button>
+            <button data-type="all"  style="margin-left: 10px;" class="btn btn-primary sendMsg"><i class="fa fa-send"></i></button>
           </td><td colspan="2"></td>
         </tr>
         <% }  %>
@@ -80,16 +80,15 @@
               <% }) %>
             </select>
             <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-            <button onclick="sendMsg(this)" style="margin-left: 10px;" class="btn btn-primary"><i class="fa fa-send"></i></button>
+            <button data-type="single" style="margin-left: 10px;" class="btn btn-primary sendMsg"><i class="fa fa-send"></i></button>
           </td>
           <td>
             <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-            <button data-toggle="modal" data-target="#contactModel" onclick="openContactUpdate(this)" data-id="<%= c._id %>" type="button" class="btn btn-success">Edit</button>
+            <button data-toggle="modal" data-target="#contactModel"  data-id="<%= c._id %>" type="button" class="btn btn-success openContactUpdate">Edit</button>
           </td>
           <td>
             <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-            <button data-id="<%= c._id %>" onclick="deleteContact(this)" type="button"
-              class="btn btn-danger">Delete</button>
+            <button data-id="<%= c._id %>"  type="button" class="btn btn-danger deleteContact">Delete</button>
           </td>
         </tr>
         <% }) }%>
@@ -122,7 +121,7 @@
           </form>
         </div>
         <div class="modal-footer">
-          <button id="updateBtn"  onclick="updateContact(this)" type="button" class="btn btn-primary">Update</button>
+          <button id="updateBtn"  type="button" class="btn btn-primary updateContact">Update</button>
           <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
         </div>
       </div>

@@ -318,7 +318,6 @@ exports.updatePassword = (req, res) => {
                 password: hash
             })
         }).then(result => {
-            console.log("change");
             return res.status(200).json({
                 success: "Succesfully Updated"
             });

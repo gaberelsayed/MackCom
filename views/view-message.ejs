@@ -34,13 +34,12 @@
                     <td><textarea name="msg" cols="30" readonly role="definition" ><%= m.msg %></textarea></td>
                     <td>
                         <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                        <button data-toggle="modal" data-target="#msgModel" onclick="openMsgUpdate(this)"
-                            data-id="<%= m._id %>" type="button" class="btn btn-success">Edit</button>
+                        <button data-toggle="modal" data-target="#msgModel" data-id="<%= m._id %>" type="button" class="btn btn-success openMsgUpdate">Edit</button>
                     </td>
                     <td>
                         <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                        <button data-id="<%= m._id %>" onclick="deleteMsg(this)" type="button"
-                            class="btn btn-danger">Delete</button>
+                        <button data-id="<%= m._id %>" type="button"
+                            class="btn btn-danger deleteMsg">Delete</button>
                     </td>
                 </tr>
                 <% }) }%>
@@ -72,7 +71,7 @@
         </form>
       </div>
       <div class="modal-footer">
-        <button id="updateBtn"  onclick="updateMsg(this)" type="button" class="btn btn-primary">Update</button>
+        <button id="updateBtn"  type="button" class="btn btn-primary updateMsg">Update</button>
         <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
       </div>
     </div>

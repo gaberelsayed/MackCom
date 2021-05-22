@@ -2,12 +2,14 @@ import Validation from './valid.js';
 
 const v = new Validation();
 
-window.sendMsg = (t,type=null) => {
-    const msgId = t.parentNode.querySelector(["select"]).value;
-    const csrf = t.parentNode.querySelector("input[name='_csrf']").value;
+$(".sendMsg").click(function (e) { 
+    e.preventDefault();
+    const type = $(this).data("type");
+    const msgId = this.parentNode.querySelector(["select"]).value;
+    const csrf = this.parentNode.querySelector("input[name='_csrf']").value;
     let mob;
-    if (type == null) {
-         mob = t.parentNode.parentNode.querySelector("input[name='mob']").value;
+    if (type == "single" ) {
+         mob = this.parentNode.parentNode.querySelector("input[name='mob']").value;
     }
     if (msgId != "null") {
         let url = "/user/sendMsg";
@@ -29,7 +31,8 @@ window.sendMsg = (t,type=null) => {
     else{
         v.showError("Please Select Message First");
     }
-}
+});
+
 
 function del (id,parent,csrf,type){
         let url = "";
@@ -62,23 +65,26 @@ function del (id,parent,csrf,type){
         });
     }
 
-window.deleteContact = (t) => {
-    const contactId = $(t).data("id");
-    const csrf = t.parentNode.querySelector("input[name='_csrf']").value;
-    const parent = t.parentNode.parentNode;
+$(".deleteContact").click(function (e) { 
+    e.preventDefault();
+    const contactId = $(this).data("id");
+    const csrf = this.parentNode.querySelector("input[name='_csrf']").value;
+    const parent = this.parentNode.parentNode;
     if (confirm("Do you really want to delete contact")) {
         del(contactId,parent,csrf,"contact");
     }
-}
+});
 
-window.deleteMsg = (t) => {
-    const msgId = $(t).data("id");
-    const csrf = t.parentNode.querySelector("input[name='_csrf']").value;
-    const parent = t.parentNode.parentNode;
+$(".deleteMsg").click(function (e) { 
+    e.preventDefault();
+    const msgId = $(this).data("id");
+    const csrf = this.parentNode.querySelector("input[name='_csrf']").value;
+    const parent = this.parentNode.parentNode;
     if (confirm("Do you really want to delete message")) {
         del(msgId,parent,csrf,"msg")
-    }
-}
+    }    
+});
+
 $("#search").keyup(function (e) {
     // e.preventDefault();
     let url = "";
@@ -102,9 +108,9 @@ $("#search").keyup(function (e) {
                     response.list.forEach(e => {
                         $("#contactsTable").append("<tr><td><input type='text' name='name' readonly value='"+e.name+"'></td><td><input type='tel' name='mob' readonly value='"+e.mobile+"'></td><td style='display: inline-flex;'><select class='form-select' name='msg'><option value='null' disabled selected>Select Message</option>"
                            +"</select><input type='hidden' name='_csrf' value="+csurf+">"
-                           +"<button onclick='sendMsg(this)' style='margin-left: 10px;' class='btn btn-primary'><i class='fa fa-send'></i></button></td><td><input type='hidden' name='_csrf' value="+csurf+">"
-                           +"<button data-id="+e._id+" onclick='openContactUpdate(this)' type='button' class='btn btn-success'>Edit</button></td><td><input type='hidden' name='_csrf' value="+csurf+">"
-                           +"<button data-id="+e._id+" onclick='deleteContact(this)' type='button' class='btn btn-danger'>Delete</button></td></tr>");
+                           +"<button data-type='single' style='margin-left: 10px;' class='btn btn-primary sendMsg'><i class='fa fa-send'></i></button></td><td><input type='hidden' name='_csrf' value="+csurf+">"
+                           +"<button data-id="+e._id+"  type='button' class='btn btn-success openContactUpdate'>Edit</button></td><td><input type='hidden' name='_csrf' value="+csurf+">"
+                           +"<button data-id="+e._id+" type='button' class='btn btn-danger deleteContact'>Delete</button></td></tr>");
                     });
                     msg.forEach(m => { $("select").append("<option value='"+m._id+"'>"+m.title+"</option>")})
                 }else{
@@ -155,39 +161,43 @@ function update (id,data1,data2,csrf,type){
     });
 }
 
-window.openContactUpdate = (t) => { 
-    const contactId = $(t).data("id");
-    const name = t.parentNode.parentNode.querySelector("input[name='name']").value;
-    const mob =  t.parentNode.parentNode.querySelector("input[name='mob']").value;
-    UpdateParent = t.parentNode.parentNode;
+$(".openContactUpdate").click(function (e) { 
+    e.preventDefault();
+    const contactId = $(this).data("id");
+    const name = this.parentNode.parentNode.querySelector("input[name='name']").value;
+    const mob =  this.parentNode.parentNode.querySelector("input[name='mob']").value;
+    UpdateParent = this.parentNode.parentNode;
         $("#name").val(name);
         $("#mob").val(mob);
         $("#updateBtn").attr("data-update",contactId);
-}
+});
 
-window.updateContact = (t) => { 
-    const contactId = $(t).data("update");
+$(".updateContact").click(function (e) { 
+    e.preventDefault();
+    const contactId = $(this).data("update");
     const name = $("#name").val();
     const mob = $("#mob").val();
-    const csrf = t.parentNode.parentNode.querySelector("input[name='_csrf']").value;
-    update(contactId,name,mob,csrf,"contact");
-    
-}
+    const csrf = this.parentNode.parentNode.querySelector("input[name='_csrf']").value;
+    update(contactId,name,mob,csrf,"contact"); 
+});
 
-window.openMsgUpdate = (t) => { 
-    const msgId = $(t).data("id");
+$(".openMsgUpdate").click(function (e) { 
+    e.preventDefault();
+    const msgId = $(this).data("id");
     // console.log("msg");
-    const title = t.parentNode.parentNode.querySelector("input[name='title']").value;
-    const msg =  t.parentNode.parentNode.querySelector("textarea[name='msg']").value;
-    UpdateParent = t.parentNode.parentNode;
+    const title = this.parentNode.parentNode.querySelector("input[name='title']").value;
+    const msg =  this.parentNode.parentNode.querySelector("textarea[name='msg']").value;
+    UpdateParent = this.parentNode.parentNode;
         $("#title").val(title);
         $("#msg").val(msg);
         $("#updateBtn").attr("data-update",msgId);
-}
-window.updateMsg = (t)=>{
-    const msgId = $(t).data("update");
+});
+
+$(".updateMsg").click(function (e) { 
+    e.preventDefault();
+    const msgId = $(this).data("update");
     const title = $("#title").val();
     const msg = $("#msg").val();
-    const csrf = t.parentNode.parentNode.querySelector("input[name='_csrf']").value;
+    const csrf = this.parentNode.parentNode.querySelector("input[name='_csrf']").value;
     update(msgId,title,msg,csrf,"msg");
-}
+});

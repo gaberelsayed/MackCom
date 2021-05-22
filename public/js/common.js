@@ -7,10 +7,11 @@ $(document).ready(function () {
     }, 5000);
 });
 
-window.updatePassword = (t) => {
+$("#updatePassword").click(function (e) { 
+    e.preventDefault();
     const old_pass = $("#pass").val();
     const new_pass = $("#new_pass").val();
-    const csrf = t.parentNode.parentNode.querySelector("input[name='_csrf']").value;
+    const csrf = this.parentNode.parentNode.querySelector("input[name='_csrf']").value;
     if(old_pass == "" || new_pass ==""){
         return v.showError("All feilds are required");
     }
@@ -31,4 +32,4 @@ window.updatePassword = (t) => {
                 return v.showError();        
         }
     });
-}
+});
