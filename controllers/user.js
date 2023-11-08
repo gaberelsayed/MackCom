@@ -14,7 +14,7 @@ exports.getimportContactURL = (req, res) => {
         scope: scopes
     });
     res.redirect(url);
-}
+}            
 
 exports.importContact = (req, res) => {
     if (req.query.error) {
